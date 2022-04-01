@@ -158,3 +158,8 @@
         min-width: 100%;
     }
 }
+.linkCustomStyle{
+    composes:linkGroup;
+    color: rgb(var(--venia-global-color-custom));
+    font-family: var(--drexel-global-fontFamily-serif);
+}
