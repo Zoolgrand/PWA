@@ -163,3 +163,7 @@
     color: rgb(var(--venia-global-color-custom));
     font-family: var(--drexel-global-fontFamily-serif);
 }
+.socialLinks li:hover{
+    color:black;
+    transform: scale(120%);
+}
