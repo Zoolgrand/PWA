@@ -25,7 +25,7 @@ import mapConfigAggregator from './ContentTypes/Map/configAggregator';
 import bannerConfigAggregator from './ContentTypes/Banner/configAggregator';
 import { BannerShimmer } from './ContentTypes/Banner';
 import ButtonItem from './ContentTypes/ButtonItem';
-import sliderConfigAggregator from './ContentTypes/Slider/configAggregator';
+import sliderConfigAggregator from '../../venia-ui/lib/components/Slider/configAggregator';
 import { SliderShimmer } from './ContentTypes/Slider';
 import { DynamicBlockShimmer } from './ContentTypes/DynamicBlock';
 
@@ -108,7 +108,7 @@ const contentTypesConfig = {
     },
     slider: {
         configAggregator: sliderConfigAggregator,
-        component: React.lazy(() => import('./ContentTypes/Slider')),
+        component: React.lazy(() => import('@magento/venia-ui/lib/components/Slider')),
         componentShimmer: SliderShimmer
     },
     // Slide is just a banner wrapped inside a slider
