@@ -1,4 +1,4 @@
-import React, { Fragment, Suspense } from 'react';
+import React, { Fragment, Suspense, useRef } from 'react';
 import { shape, string } from 'prop-types';
 import { Link, Route } from 'react-router-dom';
 
@@ -27,7 +27,9 @@ const Header = props => {
         isOnline,
         isSearchOpen,
         searchRef,
-        searchTriggerRef
+        searchTriggerRef,
+        storeConfigDataLoading,
+        storeConfigData 
     } = useHeader();
 
     const classes = useStyle(defaultClasses, props.classes);
@@ -48,6 +50,25 @@ const Header = props => {
         </Suspense>
     ) : null;
 
+const headerRef = useRef(null)
+
+const options = {
+    root:null,
+    rootMargin: '20px',
+    threshold: 1.0
+}
+
+const callback = function(entries, observer) {
+    entries.forEach(entry => {
+        console.log(entry);
+    });
+};
+
+const observer = new IntersectionObserver(callback, options);
+const target = headerRef.current;
+// console.log(typeof(target))
+// observer.observe(target);
+
     return (
         <Fragment>
             <div className={classes.switchersContainer}>
@@ -56,7 +77,7 @@ const Header = props => {
                     <CurrencySwitcher />
                 </div>
             </div>
-            <header className={rootClass} data-cy="Header-root">
+            <header ref={headerRef} id='header' className={rootClass} data-cy="Header-root">
                 <div className={classes.toolbar}>
                     <div className={classes.primaryActions}>
                         <NavTrigger />
@@ -70,7 +91,7 @@ const Header = props => {
                         className={classes.logoContainer}
                         data-cy="Header-logoContainer"
                     >
-                        <Logo classes={{ logo: classes.logo }} />
+                        <Logo storeConfigData={storeConfigData} loading={storeConfigDataLoading} classes={{ logo: classes.logo }} />
                     </Link>
                     <MegaMenu />
                     <div className={classes.secondaryActions}>

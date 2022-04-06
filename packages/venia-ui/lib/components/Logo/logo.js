@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { useStyle } from '../../classify';
 import Image from '../Image';
 import logo from './VeniaLogo.svg';
+import Shimmer from '../Shimmer';
 
 /**
  * A component that renders a logo in the header.
@@ -15,11 +16,15 @@ import logo from './VeniaLogo.svg';
  * @returns {React.Element} A React component that displays a logo.
  */
 const Logo = props => {
-    const { height, width } = props;
+    const { height, width,storeConfigData, loading} = props;
     const classes = useStyle({}, props.classes);
     const { formatMessage } = useIntl();
-
+    console.log(storeConfigData)
     const title = formatMessage({ id: 'logo.title', defaultMessage: 'Venia' });
+
+    if (loading) {
+        return <Shimmer/>
+    }
 
     return (
         <Image
