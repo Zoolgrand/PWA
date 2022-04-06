@@ -8,6 +8,9 @@ import Logo from '@magento/venia-ui/lib/components/Logo';
 import { useStyle } from '@magento/venia-ui/lib/classify';
 import defaultClasses from './footer.module.css';
 import { DEFAULT_LINKS, LOREM_IPSUM } from '@magento/venia-ui/lib/components/Footer/sampleData';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBehance, faFacebookF, faGoogle, faSkype, faTwitter } from '@fortawesome/free-brands-svg-icons';
+
 
 const Footer = props => {
     const { links } = props;
@@ -65,15 +68,24 @@ const Footer = props => {
                         />
                     </p>
                     <ul className={classes.socialLinks}>
-                        <li>
-                            <Instagram size={20} />
+
+                        <li className={classes.behance}>
+                            <FontAwesomeIcon height={16} icon={faBehance} width={19} />
                         </li>
-                        <li>
-                            <Facebook size={20} />
+                        <li className={classes.facebook}>
+                            <FontAwesomeIcon height={16} icon={faFacebookF} width={10} />
                         </li>
-                        <li>
-                            <Twitter size={20} />
+                        <li className={classes.google}>
+                            <FontAwesomeIcon height={16} icon={faGoogle} width={15} />
                         </li>
+                        <li className={classes.skype}>
+                            <FontAwesomeIcon height={16} icon={faSkype} width={15} />
+                        </li>
+                        <li className={classes.twitter}>
+                            <FontAwesomeIcon height={16} icon={faTwitter} width={16} />
+                        </li>
+
+
                     </ul>
                 </div>
             </div>

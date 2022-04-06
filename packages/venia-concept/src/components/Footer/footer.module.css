@@ -23,6 +23,36 @@
     }
 }
 
+.socialLinks .google svg,
+.socialLinks .skype svg {
+    height: 16px;
+    width: 15px;
+}
+
+.socialLinks .behance svg {
+    height: 16px;
+    width: 19px;
+}
+
+.socialLinks .facebook svg {
+    height: 16px;
+    width: 10px;
+}
+
+.socialLinks .twitter svg {
+    height: 16px;
+    width: 16px;
+}
+.socialLinks svg {
+    color: #888;
+    cursor: pointer;
+}
+
+.socialLinks svg:hover {
+    color: var(--drexel-theme-color);
+}
+
+
 .links {
     display: grid;
     gap: 2rem;
