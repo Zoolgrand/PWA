@@ -7,9 +7,9 @@ import resourceUrl from '@magento/peregrine/lib/util/makeUrl';
 import { useMegaMenuItem } from '@magento/peregrine/lib/talons/MegaMenu/useMegaMenuItem';
 
 import { useStyle } from '@magento/venia-ui/lib/classify';
-import defaultClasses from './megaMenuItem.module.css';
-import Submenu from './submenu';
-import Icon from '../../../../venia-ui/lib/components/Icon';
+import defaultClasses from '@magento/venia-ui/lib/components/MegaMenu/megaMenuItem.module.css';
+import Submenu from '@magento/venia-ui/lib/components/MegaMenu/submenu';
+import Icon from '@magento/venia-ui/lib/components/Icon';
 
 /**
  * The MegaMenuItem component displays mega menu item
