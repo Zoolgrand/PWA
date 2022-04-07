@@ -8,9 +8,15 @@
     composes: justify-center from global;
     composes: px-4 from global;
     composes: top-0 from global;
-    composes: sticky from global;
+    /* composes: sticky from global; */
+    position: relative;
     composes: w-full from global;
     composes: z-10 from global;
+}
+
+.sticky {
+    position: sticky;
+    background-color:rgba(255, 255, 255, 0,95) !important;
 }
 
 /* Large screen styles */

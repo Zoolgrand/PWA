@@ -1,8 +1,8 @@
-import React, { Fragment, Suspense } from 'react';
+import React, { Fragment, Suspense, useRef, useEffect } from 'react';
 import { shape, string } from 'prop-types';
 import { Link, Route } from 'react-router-dom';
 
-import Logo from '@magento/venia-ui/lib/components/Logo';
+import Logo from '../Logo';
 import AccountTrigger from './accountTrigger';
 import CartTrigger from '@magento/venia-ui/lib/components/Header/cartTrigger';
 import NavTrigger from '@magento/venia-ui/lib/components/Header/navTrigger';
@@ -27,11 +27,13 @@ const Header = props => {
         isOnline,
         isSearchOpen,
         searchRef,
-        searchTriggerRef
+        searchTriggerRef,
+        storeConfigData  
     } = useHeader();
 
     const classes = useStyle(defaultClasses, props.classes);
     const rootClass = isSearchOpen ? classes.open : classes.closed;
+    const headerRef = useRef(null)
 
     const searchBarFallback = (
         <div className={classes.searchFallback} ref={searchRef}>
@@ -48,15 +50,63 @@ const Header = props => {
         </Suspense>
     ) : null;
 
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            entries => {
+                if (headerRef.current) {
+                    console.log(entries[0].intersectionRatio)
+                    headerRef.current.classList.toggle(
+                        classes.sticky,
+                        entries[0].intersectionRatio < 1
+                    );
+                }
+            },
+            { threshold: [1] }
+        );
+
+        if (headerRef.current) {
+           observer.observe(document.querySelector('.my-header'));
+        }
+    }, [classes.sticky]);
+
+    // const options = {
+    //     root: null,
+    //     rootMargin: '0px',
+    //     threshold: 0
+    // };
+
+    // const callback = function(entries) {
+    //     if (headerRef.current) {
+    //         if (entries[0].isIntersecting) {
+    //             headerRef.current.style.position = 'relative';
+    //             headerRef.current.style.backgroundColor = 'rgb(255,255,255)';
+    //         } else {
+    //             headerRef.current.style.position = 'sticky';
+    //             headerRef.current.style.backgroundColor =
+    //                 'rgba(255,255,255, 0.95)';
+    //         }
+    //     }
+    // };
+
+    // const observer = new IntersectionObserver(callback, options);
+
+    // useEffect(() => {
+    //     observer.observe(document.querySelector('.my-header'));
+    // }, []);
+
+    
+
     return (
         <Fragment>
-            <div className={classes.switchersContainer}>
+            <div
+                className={[classes.switchersContainer, 'my-header'].join(' ')}
+            >
                 <div className={classes.switchers} data-cy="Header-switchers">
                     <StoreSwitcher />
                     <CurrencySwitcher />
                 </div>
             </div>
-            <header className={rootClass} data-cy="Header-root">
+            <header ref={headerRef} className={rootClass} data-cy="Header-root">
                 <div className={classes.toolbar}>
                     <div className={classes.primaryActions}>
                         <NavTrigger />
@@ -70,7 +120,7 @@ const Header = props => {
                         className={classes.logoContainer}
                         data-cy="Header-logoContainer"
                     >
-                        <Logo classes={{ logo: classes.logo }} />
+                        <Logo data ={storeConfigData} classes={{ logo: classes.logo }} />
                     </Link>
                     <MegaMenu />
                     <div className={classes.secondaryActions}>
