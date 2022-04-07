@@ -51,7 +51,7 @@ const Header = props => {
     ) : null;
 
     // IntersectionObserver  params
-    
+
     const options = {
         threshold: [1]
     };
@@ -64,6 +64,7 @@ const Header = props => {
                 entries[0].intersectionRatio < 1
             );
         }
+        console.log(entries[0].intersectionRatio)
     }
 
     const observer = new IntersectionObserver(callback, options)
@@ -73,27 +74,6 @@ const Header = props => {
             observer.observe(document.querySelector('.my-header'));
         }
     }, []);
-
-    // const callback = function(entries) {
-    //     if (headerRef.current) {
-    //         if (entries[0].isIntersecting) {
-    //             headerRef.current.style.position = 'relative';
-    //             headerRef.current.style.backgroundColor = 'rgb(255,255,255)';
-    //         } else {
-    //             headerRef.current.style.position = 'sticky';
-    //             headerRef.current.style.backgroundColor =
-    //                 'rgba(255,255,255, 0.95)';
-    //         }
-    //     }
-    // };
-
-    // const observer = new IntersectionObserver(callback, options);
-
-    // useEffect(() => {
-    //     observer.observe(document.querySelector('.my-header'));
-    // }, []);
-
-
 
     return (
         <Fragment>

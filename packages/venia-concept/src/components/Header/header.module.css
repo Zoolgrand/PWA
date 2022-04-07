@@ -17,6 +17,7 @@
 .sticky {
     position: sticky;
     background-color:rgba(255, 255, 255, 0,95) !important;
+    top: -1px;
 }
 
 /* Large screen styles */
