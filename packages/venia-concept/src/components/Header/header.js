@@ -28,7 +28,7 @@ const Header = props => {
         isSearchOpen,
         searchRef,
         searchTriggerRef,
-        storeConfigData  
+        storeConfigData
     } = useHeader();
 
     const classes = useStyle(defaultClasses, props.classes);
@@ -50,30 +50,29 @@ const Header = props => {
         </Suspense>
     ) : null;
 
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            entries => {
-                if (headerRef.current) {
-                    console.log(entries[0].intersectionRatio)
-                    headerRef.current.classList.toggle(
-                        classes.sticky,
-                        entries[0].intersectionRatio < 1
-                    );
-                }
-            },
-            { threshold: [1] }
-        );
+    // IntersectionObserver  params
+    
+    const options = {
+        threshold: [1]
+    };
+
+    const callback = (entries) => {
 
         if (headerRef.current) {
-           observer.observe(document.querySelector('.my-header'));
+            headerRef.current.classList.toggle(
+                classes.sticky,
+                entries[0].intersectionRatio < 1
+            );
         }
-    }, [classes.sticky]);
+    }
 
-    // const options = {
-    //     root: null,
-    //     rootMargin: '0px',
-    //     threshold: 0
-    // };
+    const observer = new IntersectionObserver(callback, options)
+
+    useEffect(() => {
+        if (headerRef.current) {
+            observer.observe(document.querySelector('.my-header'));
+        }
+    }, []);
 
     // const callback = function(entries) {
     //     if (headerRef.current) {
@@ -94,7 +93,7 @@ const Header = props => {
     //     observer.observe(document.querySelector('.my-header'));
     // }, []);
 
-    
+
 
     return (
         <Fragment>
@@ -120,7 +119,7 @@ const Header = props => {
                         className={classes.logoContainer}
                         data-cy="Header-logoContainer"
                     >
-                        <Logo data ={storeConfigData} classes={{ logo: classes.logo }} />
+                        <Logo data={storeConfigData} classes={{ logo: classes.logo }} />
                     </Link>
                     <MegaMenu />
                     <div className={classes.secondaryActions}>
