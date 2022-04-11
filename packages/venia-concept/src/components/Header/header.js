@@ -53,7 +53,7 @@ const Header = props => {
     // IntersectionObserver  params
 
     const options = {
-        threshold: [1]
+        threshold: 1,
     };
 
     const callback = (entries) => {
@@ -61,10 +61,10 @@ const Header = props => {
         if (headerRef.current) {
             headerRef.current.classList.toggle(
                 classes.sticky,
-                entries[0].intersectionRatio < 1
+                !entries[0].isIntersecting
             );
         }
-        console.log(entries[0].intersectionRatio)
+
     }
 
     const observer = new IntersectionObserver(callback, options)

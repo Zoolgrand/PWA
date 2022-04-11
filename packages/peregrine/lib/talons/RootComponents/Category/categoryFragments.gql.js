@@ -13,6 +13,7 @@ export const CategoryFragment = gql`
 export const ProductsFragment = gql`
     fragment ProductsFragment on Products {
         items {
+            brand
             id
             uid
             name
@@ -24,6 +25,7 @@ export const ProductsFragment = gql`
                     }
                 }
             }
+            product_brand
             sku
             small_image {
                 url

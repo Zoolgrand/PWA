@@ -3,7 +3,7 @@ import { gql } from '@apollo/client';
 export const ProductDetailsFragment = gql`
     fragment ProductDetailsFragment on ProductInterface {
         __typename
-        # eslint-disable-next-line @graphql-eslint/require-id-when-available
+        brand
         categories {
             uid
             breadcrumbs {
@@ -33,6 +33,7 @@ export const ProductDetailsFragment = gql`
                 }
             }
         }
+         product_brand
         sku
         small_image {
             url
