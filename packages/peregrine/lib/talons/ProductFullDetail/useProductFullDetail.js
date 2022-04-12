@@ -11,10 +11,13 @@ import { isSupportedProductType as isSupported } from '@magento/peregrine/lib/ut
 import { deriveErrorMessage } from '../../util/deriveErrorMessage';
 import mergeOperations from '../../util/shallowMerge';
 import defaultOperations from './productFullDetail.gql';
+import { useToasts } from '../../Toasts';
 
 const INITIAL_OPTION_CODES = new Map();
 const INITIAL_OPTION_SELECTIONS = new Map();
 const OUT_OF_STOCK_CODE = 'OUT_OF_STOCK';
+
+
 
 const deriveOptionCodesFromProduct = product => {
     // If this is a simple product it has no option codes.
@@ -226,6 +229,16 @@ export const useProductFullDetail = props => {
 
     const isSupportedProductType = isSupported(productType);
 
+    const [, { addToast }] = useToasts();
+    const showAddToCartToast = () => {
+        addToast({
+            message: formatMessage({ defaultMessage: `You added ${product.name} to your shopping cart`, id: 'productFullDetail.success' }, { name: product.name }),
+            onDismiss: remove => remove(),
+            timeout: 5000,
+            type: 'success'
+        });
+    }
+
     const [{ cartId }] = useCartContext();
     const [{ isSignedIn }] = useUserContext();
     const { formatMessage } = useIntl();
@@ -245,7 +258,7 @@ export const useProductFullDetail = props => {
         }
     ] = useMutation(
         addConfigurableProductToCartMutation ||
-            operations.addConfigurableProductToCartMutation
+        operations.addConfigurableProductToCartMutation
     );
 
     const [
@@ -253,7 +266,7 @@ export const useProductFullDetail = props => {
         { error: errorAddingSimpleProduct, loading: isAddSimpleLoading }
     ] = useMutation(
         addSimpleProductToCartMutation ||
-            operations.addSimpleProductToCartMutation
+        operations.addSimpleProductToCartMutation
     );
 
     const [
@@ -370,6 +383,7 @@ export const useProductFullDetail = props => {
                             await addSimpleProductToCart({
                                 variables
                             });
+                            showAddToCartToast()
                         } catch {
                             return;
                         }
@@ -378,6 +392,7 @@ export const useProductFullDetail = props => {
                             await addConfigurableProductToCart({
                                 variables
                             });
+                            showAddToCartToast()
                         } catch {
                             return;
                         }
@@ -408,6 +423,7 @@ export const useProductFullDetail = props => {
 
                 try {
                     await addProductToCart({ variables });
+                    showAddToCartToast()
                 } catch {
                     return;
                 }
@@ -452,7 +468,7 @@ export const useProductFullDetail = props => {
         price: productPrice,
         sku: product.sku
     };
-    
+
     const derivedErrorMessage = useMemo(
         () =>
             deriveErrorMessage([
@@ -484,13 +500,13 @@ export const useProductFullDetail = props => {
         buttonText: isSelected =>
             isSelected
                 ? formatMessage({
-                      id: 'wishlistButton.addedText',
-                      defaultMessage: 'Added to Favorites'
-                  })
+                    id: 'wishlistButton.addedText',
+                    defaultMessage: 'Added to Favorites'
+                })
                 : formatMessage({
-                      id: 'wishlistButton.addText',
-                      defaultMessage: 'Add to Favorites'
-                  }),
+                    id: 'wishlistButton.addText',
+                    defaultMessage: 'Add to Favorites'
+                }),
         item: wishlistItemOptions,
         storeConfig: storeConfigData ? storeConfigData.storeConfig : {}
     };
