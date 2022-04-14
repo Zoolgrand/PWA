@@ -1,20 +1,22 @@
-import React from 'react';
-import { FormattedMessage } from 'react-intl';
-import { Info } from 'react-feather';
+import React, { useState, useCallback } from 'react';
 import { string, number, shape } from 'prop-types';
 import { Link } from 'react-router-dom';
 import Price from '@magento/venia-ui/lib/components/Price';
 import { UNCONSTRAINED_SIZE_KEY } from '@magento/peregrine/lib/talons/Image/useImage';
 import { useGalleryItem } from '@magento/peregrine/lib/talons/Gallery/useGalleryItem';
 import resourceUrl from '@magento/peregrine/lib/util/makeUrl';
-
 import { useStyle } from '@magento/venia-ui/lib/classify';
 import Image from '@magento/venia-ui/lib/components/Image';
-import GalleryItemShimmer from './item.shimmer';
-import defaultClasses from './item.module.css';
+import defaultClasses from '@magento/venia-ui/lib/components/Gallery/item.module.css';
 import WishlistGalleryButton from '@magento/venia-ui/lib/components/Wishlist/AddToListButton';
-
+import QuickView from './quickView';
 import AddToCartbutton from '@magento/venia-ui/lib/components/Gallery/addToCartButton';
+import { useScrollLock } from '@magento/peregrine/lib/hooks/useScrollLock';
+import { Info } from 'react-feather';
+import { FormattedMessage } from 'react-intl';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye } from '@fortawesome/free-solid-svg-icons';
+
 // eslint-disable-next-line no-unused-vars
 
 
@@ -35,6 +37,19 @@ const GalleryItem = props => {
         wishlistButtonProps,
         isSupportedProductType
     } = useGalleryItem(props);
+
+    const [isOpenQuick, setIsOpenQuick] = useState(false);
+    const [iconOpacity, setIconOpacity] = useState(0)
+
+    const handleOpen = useCallback(() => {
+        setIsOpenQuick(true);
+    }, [setIsOpenQuick]);
+
+    const handleClose = useCallback(() => {
+        setIsOpenQuick(false);
+    }, [setIsOpenQuick]);
+
+    useScrollLock(isOpenQuick)
 
     const { storeConfig } = props;
 
@@ -82,6 +97,8 @@ const GalleryItem = props => {
             className={classes.root}
             aria-live="polite"
             aria-busy="false"
+            onMouseEnter={() => { setIconOpacity(1) }}
+            onMouseLeave={() => { setIconOpacity(0) }}
         >
             <Link
                 onClick={handleLinkClick}
@@ -102,6 +119,16 @@ const GalleryItem = props => {
                 />
                 {ratingAverage}
             </Link>
+
+            <FontAwesomeIcon
+                className={classes.faIcon}
+                style={{ opacity: iconOpacity }}
+                onClick={() => handleOpen()}
+                height={35}
+                icon={faEye}
+                width={35}
+            />
+
             <Link
                 onClick={handleLinkClick}
                 to={productLink}
@@ -125,6 +152,12 @@ const GalleryItem = props => {
                 {addButton}
                 {wishlistButton}
             </div>
+            <QuickView
+                isOpen={isOpenQuick}
+                onCancel={handleClose}
+                product={item}
+            />
+
         </div>
     );
 };

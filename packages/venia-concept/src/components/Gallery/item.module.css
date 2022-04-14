@@ -2,6 +2,7 @@
     align-content: start;
     display: grid;
     row-gap: 0.5rem;
+    position: relative !important;
 }
 
 .images {
@@ -23,7 +24,6 @@
 }
 
 .imageLoaded {
-    /* composes: loaded from '../Image/image.module.css'; */
     composes: loaded from '@magento/venia-ui/lib/components/Image/image.module.css';
     opacity: 1;
 }
@@ -72,3 +72,7 @@
     width: 100%;
     font-size: var(--venia-global-fontSize-100);
 }
+.faIcon{
+    position: absolute;
+}
+

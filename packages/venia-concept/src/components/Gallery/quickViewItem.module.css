@@ -1,0 +1,140 @@
+.name,
+.price {
+    text-align: start;
+}
+
+.name {
+    line-height: 30px;
+}
+
+.price {
+    font-size: var(--venia-global-fontSize-500);
+    font-weight: var(--venia-global-fontWeight-bold);
+}
+
+.actionsContainer {
+    align-items: center;
+    border-radius: 50%;
+    display: flex;
+    grid-column: 1/-1;
+    height: 50px;
+    justify-content: center;
+    justify-self: end;
+    left: 0;
+    position: initial;
+    top: 0;
+    width: 50px;
+    z-index: 2;
+}
+
+.image {
+    display: block;
+    height: 100%;
+    object-fit: contain;
+    opacity: 1;
+    transition-duration: 512ms;
+    transition-property: opacity, visibility;
+    transition-timing-function: ease-out;
+    visibility: visible;
+    width: 100%;
+}
+
+.imagePending,
+.imagePlaceholder {
+    composes: image;
+    background-color: rgb(var(--venia-global-color-gray));
+}
+
+.images,
+.imagesPending {
+    display: grid;
+    grid-template-areas: 'main';
+}
+
+.images {
+    padding: 40px 0 0;
+}
+
+.description div,
+.description p {
+    font-size: var(--venia-global-fontSize-300);
+    line-height: 30px;
+}
+
+.name {
+    font-size: var(--venia-global-fontSize-400);
+    font-weight: var(--venia-global-fontWeight-bold);
+    margin: 16px 0 0;
+    text-align: end;
+}
+
+.namePending {
+    composes: name;
+    background-color: rgb(var(--venia-global-color-gray));
+}
+
+.price {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.priceName {
+    font-size: var(--venia-global-fontSize-300);
+    margin-right: 5px;
+}
+
+.priceName span {
+    font-size: var(--venia-global-fontSize-500);
+    line-height: var(--venia-global-fontSize-500);
+}
+
+.pricePending {
+    background-color: rgb(var(--venia-global-color-gray));
+    width: 3rem;
+}
+
+.quantity {
+    align-items: start;
+    display: grid;
+    grid-gap: 10px;
+    justify-items: start;
+    justify-self: end;
+    width: fit-content;
+    margin: 10px;
+}
+
+.quantityName {
+    font-size: var(--venia-global-fontSize-300);
+}
+
+.quantity input,
+.quantity button {
+    font-size: var(--venia-global-fontSize-300);
+    font-weight: var(--venia-global-fontWeight-bold);
+    height: 44px;
+}
+
+.root,
+.rootPending {
+    align-content: start;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 0 30px 30px;
+    position: relative;
+    column-gap: 30px;
+}
+
+.productDetailWrapper {
+    display: grid;
+    justify-items: start;
+    row-gap: 20px;
+}
+
+.productFullDetailLink {
+    align-items: center;
+    display: grid;
+    height: 44px;
+    justify-items: center;
+    width: 100%;
+}
