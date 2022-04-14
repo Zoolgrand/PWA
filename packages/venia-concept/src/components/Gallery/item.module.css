@@ -2,7 +2,7 @@
     align-content: start;
     display: grid;
     row-gap: 0.5rem;
-    position: relative !important;
+    position: relative;
 }
 
 .images {
@@ -72,7 +72,17 @@
     width: 100%;
     font-size: var(--venia-global-fontSize-100);
 }
-.faIcon{
+
+.faIcon {
     position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: pointer;
+    transition: 0, 3s all ease;
+    color: var(--venia-global-color-gray-600);
 }
 
+.faIcon:hover {
+    color: rgb(51, 109, 255)
+}

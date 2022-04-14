@@ -7,7 +7,7 @@ import { useGalleryItem } from '@magento/peregrine/lib/talons/Gallery/useGallery
 import resourceUrl from '@magento/peregrine/lib/util/makeUrl';
 import { useStyle } from '@magento/venia-ui/lib/classify';
 import Image from '@magento/venia-ui/lib/components/Image';
-import defaultClasses from '@magento/venia-ui/lib/components/Gallery/item.module.css';
+import defaultClasses from './item.module.css';
 import WishlistGalleryButton from '@magento/venia-ui/lib/components/Wishlist/AddToListButton';
 import QuickView from './quickView';
 import AddToCartbutton from '@magento/venia-ui/lib/components/Gallery/addToCartButton';
