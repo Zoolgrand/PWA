@@ -63,9 +63,8 @@ const QuickViewItem = props => {
         small_image,
     } = item;
 
-    console.log(item)
-
     const productLink = resourceUrl(`/${url_key}${url_suffix || ''}`);
+    const imageLink = new URL(small_image.url).pathname;
 
     if (!item) {
         return <ItemPlaceholder classes={classes} />;
@@ -98,7 +97,7 @@ const QuickViewItem = props => {
 
     return (
         <div className={classes.root}>
-            <Image src={small_image.url} alt='Image not found' height={550} width={390} placeholder='Pr' type='image-product' />
+            <Image src={imageLink} alt='Image not found' height={550} width={390} type='image-product' />
             <div className={classes.productDetailWrapper}>
                 {product_brand ? (
                     <p className={classes.brand}>{product_brand}</p>
