@@ -1,9 +1,10 @@
-import React, { Fragment, Suspense, useMemo, useRef } from 'react';
-import { FormattedMessage } from 'react-intl';
+import React, { Fragment, Suspense, useMemo, useRef, useState } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { array, number, shape, string } from 'prop-types';
 
 import { useIsInViewport } from '@magento/peregrine/lib/hooks/useIsInViewport';
 import { useCategoryContent } from '@magento/peregrine/lib/talons/RootComponents/Category';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { useStyle } from '@magento/venia-ui/lib/classify';
 import Breadcrumbs from '@magento/venia-ui/lib/components/Breadcrumbs';
@@ -22,6 +23,8 @@ import SortedByContainer, {
 } from '@magento/venia-ui/lib/components/SortedByContainer';
 import defaultClasses from '@magento/venia-ui/lib/RootComponents/Category/category.module.css';
 import NoProductsFound from '@magento/venia-ui/lib/RootComponents/Category/NoProductsFound';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faList } from '@fortawesome/free-solid-svg-icons';
 
 const FilterModal = React.lazy(() => import('@magento/venia-ui/lib/components/FilterModal'));
 const FilterSidebar = React.lazy(() => import('@magento/venia-ui/lib/components/FilterSidebar')
@@ -54,11 +57,36 @@ const CategoryContent = props => {
         totalPagesFromData
     } = talonProps;
 
+    const sectionRef = useRef(null);
     const sidebarRef = useRef(null);
     const classes = useStyle(defaultClasses, props.classes);
+    const { formatMessage } = useIntl();
     const shouldRenderSidebarContent = useIsInViewport({
         elementRef: sidebarRef
     });
+
+    const { search } = useLocation();
+    const history = useHistory();
+    const urlParams = new URLSearchParams(search);
+    const [view, setView] = useState(!urlParams.get('view') ? 'grid' : 'list');
+
+    const handleView = type => {
+
+        sectionRef.current.classList.toggle(classes.list);
+
+        if (!urlParams.get('view')) {
+            history.push(search + '&view=list');
+        } else {
+            urlParams.delete('view');
+            history.push(urlParams);
+        }
+
+        if (type === 'list') {
+            setView('list');
+        } else {
+            setView('grid');
+        }
+    }
 
     const shouldShowFilterButtons = filters && filters.length;
     const shouldShowFilterShimmer = filters === null;
@@ -132,7 +160,7 @@ const CategoryContent = props => {
 
         return (
             <Fragment>
-                <section className={classes.gallery}>{gallery}</section>
+                <section className={`${classes.gallery} ${urlParams.get('view') ? classes.list : ''}`} ref={sectionRef}>{gallery}</section>
                 <div className={classes.pagination}>{pagination}</div>
             </Fragment>
         );
@@ -164,6 +192,29 @@ const CategoryContent = props => {
                     </h1>
                     {categoryDescriptionElement}
                 </div>
+
+                <div className={classes.viewTriggerContainer}>
+                    <button
+                        className={`${classes.gridTrigger} ${view === 'grid' ? classes.active : ''}`}
+                        disabled={view === 'grid' && 'disabled'}
+                        onClick={() => handleView('grid')}
+                        title={formatMessage({ defaultMessage: 'Grid', id: 'categoryContent.grid' })}
+                        type={'button'}
+                    >
+                        <FontAwesomeIcon height={14} icon={faList} width={14} />
+                    </button>
+
+                    <button
+                        className={`${classes.listTrigger} ${view === 'list' ? classes.active : ''}`}
+                        disabled={view === 'list' && 'disabled'}
+                        onClick={() => handleView('list')}
+                        title={formatMessage({ defaultMessage: 'List', id: 'categoryContent.list' })}
+                        type={'button'}
+                    >
+                        <FontAwesomeIcon height={14} icon={faList} width={14} />
+                    </button>
+                </div>
+
                 <div className={classes.contentWrapper}>
                     <div ref={sidebarRef} className={classes.sidebar}>
                         <Suspense fallback={<FilterSidebarShimmer />}>
