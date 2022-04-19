@@ -149,7 +149,7 @@ const CategoryContent = props => {
         }
 
         const gallery = totalPagesFromData ? (
-            <Gallery items={items} />
+            <Gallery items={items} layout={view} />
         ) : (
             <GalleryShimmer items={items} />
         );

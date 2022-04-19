@@ -86,3 +86,9 @@
 .faIcon:hover {
     color: rgb(51, 109, 255)
 }
+.bottomWrap{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

@@ -51,8 +51,7 @@ const GalleryItem = props => {
 
     useScrollLock(isOpenQuick)
 
-    const { storeConfig } = props;
-
+    const { storeConfig, layout } = props;
     const productUrlSuffix = storeConfig && storeConfig.product_url_suffix;
 
     const classes = useStyle(defaultClasses, props.classes);
@@ -128,29 +127,30 @@ const GalleryItem = props => {
                 icon={faEye}
                 width={35}
             />
+            <div className={layout === 'list' ? classes.bottomWrap : null}>
+                <Link
+                    onClick={handleLinkClick}
+                    to={productLink}
+                    className={classes.name}
+                    data-cy="GalleryItem-name"
+                >
+                    <span>{name}</span>
+                </Link>
+                <div data-cy="GalleryItem-price" className={classes.price}>
+                    {item.brand && <div>Brand: {item.product_brand}</div>}
+                    <Price
+                        value={price_range.maximum_price.regular_price.value}
+                        currencyCode={
+                            price_range.maximum_price.regular_price.currency
+                        }
+                    />
+                </div>
 
-            <Link
-                onClick={handleLinkClick}
-                to={productLink}
-                className={classes.name}
-                data-cy="GalleryItem-name"
-            >
-                <span>{name}</span>
-            </Link>
-            <div data-cy="GalleryItem-price" className={classes.price}>
-                {item.brand && <div>Brand: {item.product_brand}</div>}
-                <Price
-                    value={price_range.maximum_price.regular_price.value}
-                    currencyCode={
-                        price_range.maximum_price.regular_price.currency
-                    }
-                />
-            </div>
-
-            <div className={classes.actionsContainer}>
-                {' '}
-                {addButton}
-                {wishlistButton}
+                <div className={classes.actionsContainer}>
+                    {' '}
+                    {addButton}
+                    {wishlistButton}
+                </div>
             </div>
             <QuickView
                 isOpen={isOpenQuick}
