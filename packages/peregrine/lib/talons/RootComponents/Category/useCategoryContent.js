@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLazyQuery, useQuery } from '@apollo/client';
 
 import mergeOperations from '../../../util/shallowMerge';
@@ -18,9 +18,20 @@ import DEFAULT_OPERATIONS from './categoryContent.gql';
  * @returns {number} result.totalPagesFromData - The total amount of pages for the query.
  */
 export const useCategoryContent = props => {
-    const { categoryId, data, pageSize = 6 } = props;
+    const {
+        categoryId,
+        data,
+        pageSize = 6,
+        galleryRef,
+        myCurrentPage,
+        setMyCurrentPage,
+        totalPages,
+        isLoading,
+        view
+    } = props;
 
     const operations = mergeOperations(DEFAULT_OPERATIONS, props.operations);
+    const [itemsForRender, setItemsForRender] = useState([])
 
     const {
         getCategoryContentQuery,
@@ -55,6 +66,38 @@ export const useCategoryContent = props => {
         }
     });
 
+    const filters = filterData ? filterData.products.aggregations : null;
+    const items = data ? data.products.items : placeholderItems;
+    const totalPagesFromData = data
+        ? data.products.page_info.total_pages
+        : null;
+    const totalCount = data ? data.products.total_count : null;
+    const categoryName = categoryData
+        ? categoryData.categories.items[0].name
+        : null;
+    const categoryDescription = categoryData
+        ? categoryData.categories.items[0].description
+        : null;
+    const availableSortMethods = sortData
+        ? sortData.products.sort_fields.options
+        : null;
+
+    const debounce = (func, delay) => {
+        let timeout;
+        return function () {
+            const fnCall = () => { func.apply(this, arguments) }
+            clearTimeout(timeout);
+            timeout = setTimeout(fnCall, delay)
+        };
+    }
+
+    const handleScroll = () => {
+        let scrollPercentage = (window.pageYOffset / galleryRef?.current?.clientHeight) * 100;
+        if (scrollPercentage > 70 && isFinite(scrollPercentage) && myCurrentPage < totalPages) {
+            setMyCurrentPage(myCurrentPage + 1);
+        }
+    };
+
     useEffect(() => {
         if (categoryId) {
             getFilters({
@@ -79,21 +122,38 @@ export const useCategoryContent = props => {
         }
     }, [categoryId, getSortMethods]);
 
-    const filters = filterData ? filterData.products.aggregations : null;
-    const items = data ? data.products.items : placeholderItems;
-    const totalPagesFromData = data
-        ? data.products.page_info.total_pages
-        : null;
-    const totalCount = data ? data.products.total_count : null;
-    const categoryName = categoryData
-        ? categoryData.categories.items[0].name
-        : null;
-    const categoryDescription = categoryData
-        ? categoryData.categories.items[0].description
-        : null;
-    const availableSortMethods = sortData
-        ? sortData.products.sort_fields.options
-        : null;
+    useEffect(() => {
+        window.addEventListener("scroll", debounce(handleScroll, 200), { passive: true });
+
+        return () => {
+            window.removeEventListener("scroll", debounce(handleScroll, 200), { passive: true });
+        };
+    });
+
+    useEffect(() => {
+
+        if (itemsForRender.length) {
+            setItemsForRender([])
+        }
+
+    }, [categoryName])
+
+    useEffect(() => {
+
+        if (!isLoading) {
+            setItemsForRender(prevState => [...prevState, ...items])
+        }
+
+        return () => { setItemsForRender(itemsForRender) }
+
+    }, [items])
+
+    useEffect(() => {
+
+        setItemsForRender([])
+        setMyCurrentPage(1)
+
+    }, [view])
 
     return {
         availableSortMethods,
@@ -102,6 +162,7 @@ export const useCategoryContent = props => {
         filters,
         items,
         totalCount,
-        totalPagesFromData
+        totalPagesFromData,
+        itemsForRender,
     };
 };

@@ -1,4 +1,4 @@
-import React, { Fragment, Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import React, { Fragment, Suspense, useMemo, useRef, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { array, number, shape, string } from 'prop-types';
 
@@ -14,7 +14,6 @@ import FilterModalOpenButton, {
 import { FilterSidebarShimmer } from '@magento/venia-ui/lib/components/FilterSidebar';
 import Gallery, { GalleryShimmer } from '../Gallery';
 import { StoreTitle } from '../Head';
-import Pagination from '@magento/venia-ui/lib/components/Pagination';
 import ProductSort, { ProductSortShimmer } from '@magento/venia-ui/lib/components/ProductSort';
 import RichContent from '@magento/venia-ui/lib/components/RichContent';
 import Shimmer from '@magento/venia-ui/lib/components/Shimmer';
@@ -31,6 +30,23 @@ const FilterSidebar = React.lazy(() => import('@magento/venia-ui/lib/components/
 );
 
 const CategoryContent = props => {
+
+    const galleryRef = useRef(null)
+    const sectionRef = useRef(null);
+    const sidebarRef = useRef(null);
+
+    const { search } = useLocation();
+    const history = useHistory();
+    const urlParams = new URLSearchParams(search);
+
+    const classes = useStyle(defaultClasses, props.classes);
+    const { formatMessage } = useIntl();
+    const shouldRenderSidebarContent = useIsInViewport({
+        elementRef: sidebarRef
+    });
+    
+    const [view, setView] = useState(!urlParams.get('view') ? 'grid' : 'list');
+
     const {
         categoryId,
         data,
@@ -41,11 +57,21 @@ const CategoryContent = props => {
         myCurrentPage,
         setMyCurrentPage
     } = props;
+
     const [currentSort] = sortProps;
+
+    const { totalPages } = pageControl
+
     const talonProps = useCategoryContent({
         categoryId,
         data,
-        pageSize
+        pageSize,
+        galleryRef,
+        myCurrentPage,
+        setMyCurrentPage,
+        totalPages,
+        isLoading,
+        view
     });
 
     const {
@@ -55,74 +81,10 @@ const CategoryContent = props => {
         filters,
         items,
         totalCount,
-        totalPagesFromData
+        totalPagesFromData,
+        itemsForRender,
     } = talonProps;
 
-    const {totalPages } = pageControl
-
-    const sectionRef = useRef(null);
-    const sidebarRef = useRef(null);
-    const galleryRef = useRef(null)
-    const classes = useStyle(defaultClasses, props.classes);
-    const { formatMessage } = useIntl();
-    const shouldRenderSidebarContent = useIsInViewport({
-        elementRef: sidebarRef
-    });
-
-    const { search } = useLocation();
-    const history = useHistory();
-    const urlParams = new URLSearchParams(search);
-    const [view, setView] = useState(!urlParams.get('view') ? 'grid' : 'list');
-    const [itemsForRender, setItemsForRender] = useState([])
-
-    const debounce = (func, delay) => {
-        let timeout;
-        return function () {
-            const fnCall = () => { func.apply(this, arguments) }
-            clearTimeout(timeout);
-            timeout = setTimeout(fnCall, delay)
-        };
-    }
-
-    const handleScroll = () => {
-        let scrollPercentage = (window.pageYOffset / galleryRef?.current?.clientHeight) * 100;
-        if (scrollPercentage > 70 && isFinite(scrollPercentage) && myCurrentPage < totalPages) {
-            setMyCurrentPage(myCurrentPage + 1);
-        }
-    };
-
-    useEffect(() => {
-        window.addEventListener("scroll", debounce(handleScroll, 200), { passive: true });
-
-        return () => {
-            window.removeEventListener("scroll", debounce(handleScroll, 200), { passive: true });
-        };
-    });
-
-    useEffect(() => {
-
-        if (itemsForRender.length) {
-            setItemsForRender([])
-        }
-
-    }, [categoryName])
-
-    useEffect(() => {
-
-        setItemsForRender([])
-        setMyCurrentPage(1)
-
-    }, [view])
-
-    useEffect(() => {
-
-        if (!isLoading) {
-            setItemsForRender(prevState => [...prevState, ...items])
-        }
-
-        return () => { setItemsForRender(itemsForRender) }
-
-    }, [items])
 
     const handleView = type => {
 
@@ -208,14 +170,9 @@ const CategoryContent = props => {
             <GalleryShimmer items={itemsForRender} />
         );
 
-        const pagination = totalPagesFromData ? (
-            <Pagination pageControl={pageControl} />
-        ) : null;
-
         return (
             <Fragment>
                 <section className={`${classes.gallery} ${urlParams.get('view') ? classes.list : ''}`} ref={sectionRef}>{gallery}</section>
-                {/* <div className={classes.pagination}>{pagination}</div> */}
             </Fragment>
         );
     }, [
