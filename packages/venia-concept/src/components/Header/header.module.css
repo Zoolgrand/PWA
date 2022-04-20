@@ -16,7 +16,7 @@
 
 .sticky {
     position: sticky;
-    background-color:rgba(255, 255, 255, 0,95) !important;
+    background-color:rgba(255, 255, 255, .95);
     top: -1px;
 }
 

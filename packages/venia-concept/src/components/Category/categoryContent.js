@@ -1,4 +1,4 @@
-import React, { Fragment, Suspense, useMemo, useRef, useState } from 'react';
+import React, { Fragment, Suspense, useMemo, useRef} from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { array, number, shape, string } from 'prop-types';
 
@@ -44,8 +44,6 @@ const CategoryContent = props => {
     const shouldRenderSidebarContent = useIsInViewport({
         elementRef: sidebarRef
     });
-    
-    const [view, setView] = useState(!urlParams.get('view') ? 'grid' : 'list');
 
     const {
         categoryId,
@@ -71,7 +69,11 @@ const CategoryContent = props => {
         setMyCurrentPage,
         totalPages,
         isLoading,
-        view
+        sectionRef,
+        classes,
+        urlParams,
+        search,
+        history
     });
 
     const {
@@ -83,26 +85,9 @@ const CategoryContent = props => {
         totalCount,
         totalPagesFromData,
         itemsForRender,
+        handleView,
+        view
     } = talonProps;
-
-
-    const handleView = type => {
-
-        sectionRef.current.classList.toggle(classes.list);
-
-        if (!urlParams.get('view')) {
-            history.push(search + `venia-${categoryName.toLowerCase()}?view=list`);
-        } else {
-            urlParams.delete('view');
-            history.push(urlParams);
-        }
-
-        if (type === 'list') {
-            setView('list');
-        } else {
-            setView('grid');
-        }
-    }
 
     const shouldShowFilterButtons = filters && filters.length;
     const shouldShowFilterShimmer = filters === null;

@@ -5,7 +5,6 @@ import { useLazyQuery, useQuery } from '@apollo/client';
 import mergeOperations from '../../../util/shallowMerge';
 import { useAppContext } from '../../../context/app';
 import { usePagination } from '../../../hooks/usePagination';
-import { useScrollTopOnChange } from '../../../hooks/useScrollTopOnChange';
 import { useSort } from '../../../hooks/useSort';
 import {
     getFiltersFromSearch,
@@ -67,12 +66,7 @@ export const useCategory = props => {
         totalPages
     };
 
-    const [
-        ,
-        {
-            actions: { setPageLoading }
-        }
-    ] = useAppContext();
+    const [,{actions: { setPageLoading }}] = useAppContext();
 
     const [runQuery, queryResponse] = useLazyQuery(getCategoryQuery, {
         fetchPolicy: 'cache-and-network',
@@ -214,7 +208,7 @@ export const useCategory = props => {
         (categoryLoading && !data) ||
         introspectionLoading;
 
-    useScrollTopOnChange(currentPage);
+    // useScrollTopOnChange(currentPage);
 
     return {
         error,

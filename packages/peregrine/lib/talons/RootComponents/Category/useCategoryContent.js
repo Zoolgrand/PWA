@@ -27,11 +27,16 @@ export const useCategoryContent = props => {
         setMyCurrentPage,
         totalPages,
         isLoading,
-        view
+        sectionRef,
+        classes,
+        urlParams,
+        search,
+        history
     } = props;
 
     const operations = mergeOperations(DEFAULT_OPERATIONS, props.operations);
     const [itemsForRender, setItemsForRender] = useState([])
+    const [view, setView] = useState(!urlParams.get('view') ? 'grid' : 'list');
 
     const {
         getCategoryContentQuery,
@@ -97,6 +102,25 @@ export const useCategoryContent = props => {
             setMyCurrentPage(myCurrentPage + 1);
         }
     };
+
+    const handleView = type => {
+
+        sectionRef.current.classList.toggle(classes.list);
+
+        if (!urlParams.get('view')) {
+            history.push(search + `venia-${categoryName.toLowerCase()}?view=list`);
+        } else {
+            urlParams.delete('view');
+            history.push(urlParams);
+        }
+
+        if (type === 'list') {
+            setView('list');
+        } else {
+            setView('grid');
+        }
+    }
+
 
     useEffect(() => {
         if (categoryId) {
@@ -164,5 +188,7 @@ export const useCategoryContent = props => {
         totalCount,
         totalPagesFromData,
         itemsForRender,
+        handleView,
+        view
     };
 };
