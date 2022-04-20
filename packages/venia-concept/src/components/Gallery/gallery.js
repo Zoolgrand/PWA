@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { forwardRef, useMemo } from 'react';
 import { string, shape, array } from 'prop-types';
 
 import { useStyle } from '@magento/venia-ui/lib/classify';
@@ -13,7 +13,7 @@ import { useGallery } from '@magento/peregrine/lib/talons/Gallery/useGallery';
  *
  * @params {Array} props.items an array of items to render
  */
-const Gallery = props => {
+const Gallery = forwardRef ((props,ref) => {
     const { items, layout } = props;
     const classes = useStyle(defaultClasses, props.classes);
     const talonProps = useGallery();
@@ -43,11 +43,12 @@ const Gallery = props => {
             className={classes.root}
             aria-live="polite"
             aria-busy="false"
+            ref={ref}
         >
             <div className={classes.items}>{galleryItems}</div>
         </div>
     );
-};
+});
 
 Gallery.propTypes = {
     classes: shape({

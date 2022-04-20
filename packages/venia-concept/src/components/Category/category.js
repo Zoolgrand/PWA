@@ -26,7 +26,9 @@ const Category = props => {
         categoryData,
         pageControl,
         sortProps,
-        pageSize
+        pageSize, 
+        myCurrentPage,
+        setMyCurrentPage
     } = talonProps;
     const classes = useStyle(defaultClasses, props.classes);
 
@@ -51,6 +53,8 @@ const Category = props => {
                 pageControl={pageControl}
                 sortProps={sortProps}
                 pageSize={pageSize}
+                myCurrentPage={myCurrentPage}
+                setMyCurrentPage={setMyCurrentPage}
             />
         </Fragment>
     );

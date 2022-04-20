@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useLazyQuery, useQuery } from '@apollo/client';
 
@@ -43,6 +43,7 @@ export const useCategory = props => {
 
     const operations = mergeOperations(DEFAULT_OPERATIONS, props.operations);
     const { getCategoryQuery, getFilterInputsQuery } = operations;
+    const [myCurrentPage, setMyCurrentPage] = useState(1)
 
     const { data: pageSizeData } = useQuery(getPageSize, {
         fetchPolicy: 'cache-and-network',
@@ -50,7 +51,7 @@ export const useCategory = props => {
     });
     const pageSize = pageSizeData && pageSizeData.storeConfig.grid_per_page;
 
-    const [paginationValues, paginationApi] = usePagination();
+    const [paginationValues, paginationApi] = usePagination({myCurrentPage:myCurrentPage});
     const { currentPage, totalPages } = paginationValues;
     const { setCurrentPage, setTotalPages } = paginationApi;
 
@@ -222,6 +223,8 @@ export const useCategory = props => {
         metaDescription,
         pageControl,
         sortProps,
-        pageSize
+        pageSize,
+        myCurrentPage,
+        setMyCurrentPage
     };
 };

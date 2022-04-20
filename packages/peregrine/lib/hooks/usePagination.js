@@ -1,26 +1,26 @@
 import { useCallback, useMemo, useState, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { getSearchParam } from './useSearchParam';
+// import { getSearchParam } from './useSearchParam';
 
 /**
  * Sets a query parameter in history.
  *
  * @private
  */
-const setQueryParam = ({ history, location, parameter, replace, value }) => {
-    const { search } = location;
-    const queryParams = new URLSearchParams(search);
+// const setQueryParam = ({ history, location, parameter, replace, value }) => {
+//     const { search } = location;
+//     const queryParams = new URLSearchParams(search);
 
-    queryParams.set(parameter, value);
-    const destination = { search: queryParams.toString() };
+//     queryParams.set(parameter, value);
+//     const destination = { search: queryParams.toString() };
 
-    if (replace) {
-        history.replace(destination);
-    } else {
-        history.push(destination);
-    }
-};
+//     if (replace) {
+//         history.replace(destination);
+//     } else {
+//         history.push(destination);
+//     }
+// };
 
 const defaultInitialPage = 1;
 
@@ -43,37 +43,38 @@ const defaultInitialPage = 1;
  * @return {Object[]} An array with two entries containing the following content: [ {@link PaginationState}, {@link API} ]
  */
 export const usePagination = (props = {}) => {
-    const { namespace = '', parameter = 'page', initialTotalPages = 1 } = props;
+    const { namespace = '', parameter = 'page', initialTotalPages = 1, myCurrentPage } = props;
 
     const history = useHistory();
     const location = useLocation();
     const [totalPages, setTotalPages] = useState(initialTotalPages);
 
-    const searchParam = namespace ? `${namespace}_${parameter}` : parameter;
+    // const searchParam = namespace ? `${namespace}_${parameter}` : parameter;
     const initialPage = props.initialPage || defaultInitialPage;
-    const currentPage = parseInt(getSearchParam(searchParam, location));
+    // const currentPage = parseInt(getSearchParam(searchParam, location));
+    const currentPage = myCurrentPage;
 
     // use the location to hold state
     const setCurrentPage = useCallback(
         (page, replace = false) => {
             // Update the query parameter.
-            setQueryParam({
-                history,
-                location,
-                parameter: searchParam,
-                replace,
-                value: page
-            });
+            // setQueryParam({
+            //     history,
+            //     location,
+            //     // parameter: searchParam,
+            //     replace,
+            //     value: page
+            // });
         },
-        [history, location, searchParam]
+        [history, location]
     );
 
     // ensure the location contains a page number
-    useEffect(() => {
-        if (!currentPage) {
-            setCurrentPage(initialPage, true);
-        }
-    }, [currentPage, initialPage, setCurrentPage]);
+    // useEffect(() => {
+    //     if (!currentPage) {
+    //         setCurrentPage(initialPage, false);
+    //     }
+    // }, [currentPage, initialPage, setCurrentPage]);
 
     /**
      * The current pagination state

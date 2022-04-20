@@ -1,4 +1,4 @@
-import React, { Fragment, Suspense, useMemo, useRef, useState } from 'react';
+import React, { Fragment, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { array, number, shape, string } from 'prop-types';
 
@@ -37,10 +37,11 @@ const CategoryContent = props => {
         isLoading,
         pageControl,
         sortProps,
-        pageSize
+        pageSize,
+        myCurrentPage,
+        setMyCurrentPage
     } = props;
     const [currentSort] = sortProps;
-
     const talonProps = useCategoryContent({
         categoryId,
         data,
@@ -57,8 +58,11 @@ const CategoryContent = props => {
         totalPagesFromData
     } = talonProps;
 
+    const {totalPages } = pageControl
+
     const sectionRef = useRef(null);
     const sidebarRef = useRef(null);
+    const galleryRef = useRef(null)
     const classes = useStyle(defaultClasses, props.classes);
     const { formatMessage } = useIntl();
     const shouldRenderSidebarContent = useIsInViewport({
@@ -69,13 +73,63 @@ const CategoryContent = props => {
     const history = useHistory();
     const urlParams = new URLSearchParams(search);
     const [view, setView] = useState(!urlParams.get('view') ? 'grid' : 'list');
+    const [itemsForRender, setItemsForRender] = useState([])
+
+    const debounce = (func, delay) => {
+        let timeout;
+        return function () {
+            const fnCall = () => { func.apply(this, arguments) }
+            clearTimeout(timeout);
+            timeout = setTimeout(fnCall, delay)
+        };
+    }
+
+    const handleScroll = () => {
+        let scrollPercentage = (window.pageYOffset / galleryRef?.current?.clientHeight) * 100;
+        if (scrollPercentage > 70 && isFinite(scrollPercentage) && myCurrentPage < totalPages) {
+            setMyCurrentPage(myCurrentPage + 1);
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener("scroll", debounce(handleScroll, 200), { passive: true });
+
+        return () => {
+            window.removeEventListener("scroll", debounce(handleScroll, 200), { passive: true });
+        };
+    });
+
+    useEffect(() => {
+
+        if (itemsForRender.length) {
+            setItemsForRender([])
+        }
+
+    }, [categoryName])
+
+    useEffect(() => {
+
+        setItemsForRender([])
+        setMyCurrentPage(1)
+
+    }, [view])
+
+    useEffect(() => {
+
+        if (!isLoading) {
+            setItemsForRender(prevState => [...prevState, ...items])
+        }
+
+        return () => { setItemsForRender(itemsForRender) }
+
+    }, [items])
 
     const handleView = type => {
 
         sectionRef.current.classList.toggle(classes.list);
 
         if (!urlParams.get('view')) {
-            history.push(search + '&view=list');
+            history.push(search + `venia-${categoryName.toLowerCase()}?view=list`);
         } else {
             urlParams.delete('view');
             history.push(urlParams);
@@ -149,9 +203,9 @@ const CategoryContent = props => {
         }
 
         const gallery = totalPagesFromData ? (
-            <Gallery items={items} layout={view} />
+            <Gallery items={itemsForRender} layout={view} ref={galleryRef} />
         ) : (
-            <GalleryShimmer items={items} />
+            <GalleryShimmer items={itemsForRender} />
         );
 
         const pagination = totalPagesFromData ? (
@@ -161,7 +215,7 @@ const CategoryContent = props => {
         return (
             <Fragment>
                 <section className={`${classes.gallery} ${urlParams.get('view') ? classes.list : ''}`} ref={sectionRef}>{gallery}</section>
-                <div className={classes.pagination}>{pagination}</div>
+                {/* <div className={classes.pagination}>{pagination}</div> */}
             </Fragment>
         );
     }, [
@@ -215,7 +269,7 @@ const CategoryContent = props => {
                     </button>
                 </div>
 
-                <div className={classes.contentWrapper}>
+                <div className={classes.contentWrapper} >
                     <div ref={sidebarRef} className={classes.sidebar}>
                         <Suspense fallback={<FilterSidebarShimmer />}>
                             {shouldRenderSidebarContent ? sidebar : null}
