@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import { useAppContext } from '@magento/peregrine/lib/context/app';
 import { useDropdown } from '@magento/peregrine/lib/hooks/useDropdown';
@@ -18,7 +18,7 @@ query getStoreConfig {
 } 
 `;
 
-export const useHeader = () => {
+export const useHeader = ({classes, headerRef}) => {
     const [{ hasBeenOffline, isOnline, isPageLoading }] = useAppContext();
     const {
         elementRef: searchRef,
@@ -33,6 +33,31 @@ export const useHeader = () => {
 
     });
     const storeConfigData = data?.storeConfig
+
+  // IntersectionObserver  params
+    const options = {
+        threshold: 1,
+    };
+
+    const callback = (entries) => {
+
+        if (headerRef.current) {
+            headerRef.current.classList.toggle(
+                classes.sticky,
+                !entries[0].isIntersecting
+            );
+        }
+
+    }
+
+    const observer = new IntersectionObserver(callback, options)
+
+    useEffect(() => {
+        if (headerRef.current) {
+            observer.observe(document.querySelector('.my-header'));
+        }
+    }, []);
+
 
     const handleSearchTriggerClick = useCallback(() => {
         // Toggle the Search input form.

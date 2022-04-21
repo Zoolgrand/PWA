@@ -1,7 +1,7 @@
 import React from 'react';
 import { FocusScope } from 'react-aria';
-import { bool, func, object, string } from 'prop-types';
-import { Portal } from '@magento/venia-ui/lib/components/Portal';
+import { bool, func, object } from 'prop-types';
+import { Portal } from '../Portal';
 import { X as CloseIcon } from 'react-feather';
 import QuickViewItem from './quickViewItem';
 import Icon from '@magento/venia-ui/lib/components/Icon';

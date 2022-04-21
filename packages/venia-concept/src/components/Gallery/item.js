@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 import { string, number, shape } from 'prop-types';
 import { Link } from 'react-router-dom';
 import Price from '@magento/venia-ui/lib/components/Price';
@@ -9,7 +9,7 @@ import { useStyle } from '@magento/venia-ui/lib/classify';
 import Image from '@magento/venia-ui/lib/components/Image';
 import defaultClasses from './item.module.css';
 import WishlistGalleryButton from '@magento/venia-ui/lib/components/Wishlist/AddToListButton';
-import QuickView from './quickView';
+import QuickView from '../QuickView/quickView';
 import AddToCartbutton from '@magento/venia-ui/lib/components/Gallery/addToCartButton';
 import { useScrollLock } from '@magento/peregrine/lib/hooks/useScrollLock';
 import { Info } from 'react-feather';
@@ -35,19 +35,13 @@ const GalleryItem = props => {
         handleLinkClick,
         item,
         wishlistButtonProps,
-        isSupportedProductType
+        isSupportedProductType, 
+        isOpenQuick, 
+        iconOpacity, 
+        handleOpen, 
+        handleClose,
+        setIconOpacity
     } = useGalleryItem(props);
-
-    const [isOpenQuick, setIsOpenQuick] = useState(false);
-    const [iconOpacity, setIconOpacity] = useState(0)
-
-    const handleOpen = useCallback(() => {
-        setIsOpenQuick(true);
-    }, [setIsOpenQuick]);
-
-    const handleClose = useCallback(() => {
-        setIsOpenQuick(false);
-    }, [setIsOpenQuick]);
 
     useScrollLock(isOpenQuick)
 

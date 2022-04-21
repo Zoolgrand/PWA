@@ -1,4 +1,4 @@
-import React, { Fragment, Suspense, useRef, useEffect } from 'react';
+import React, { Fragment, Suspense, useRef } from 'react';
 import { shape, string } from 'prop-types';
 import { Link, Route } from 'react-router-dom';
 
@@ -21,6 +21,10 @@ import PageLoadingIndicator from '@magento/venia-ui/lib/components/PageLoadingIn
 const SearchBar = React.lazy(() => import('@magento/venia-ui/lib/components/SearchBar'));
 
 const Header = props => {
+
+    const classes = useStyle(defaultClasses, props.classes);
+    const headerRef = useRef(null)
+
     const {
         handleSearchTriggerClick,
         hasBeenOffline,
@@ -29,11 +33,13 @@ const Header = props => {
         searchRef,
         searchTriggerRef,
         storeConfigData
-    } = useHeader();
+    } = useHeader({
+        classes,
+        headerRef
+    });
 
-    const classes = useStyle(defaultClasses, props.classes);
     const rootClass = isSearchOpen ? classes.open : classes.closed;
-    const headerRef = useRef(null)
+
 
     const searchBarFallback = (
         <div className={classes.searchFallback} ref={searchRef}>
@@ -49,31 +55,6 @@ const Header = props => {
             </Route>
         </Suspense>
     ) : null;
-
-    // IntersectionObserver  params
-
-    const options = {
-        threshold: 1,
-    };
-
-    const callback = (entries) => {
-
-        if (headerRef.current) {
-            headerRef.current.classList.toggle(
-                classes.sticky,
-                !entries[0].isIntersecting
-            );
-        }
-
-    }
-
-    const observer = new IntersectionObserver(callback, options)
-
-    useEffect(() => {
-        if (headerRef.current) {
-            observer.observe(document.querySelector('.my-header'));
-        }
-    }, []);
 
     return (
         <Fragment>
