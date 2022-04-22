@@ -169,7 +169,7 @@
 }
 
 .quantityRoot {
-    composes: root from '~@magento/venia-ui/lib/components/CartPage/ProductListing/quantity.module.css';
+    composes: root from '~@magento/venia-ui/lib/components/QuantityStepper/quantityStepper.module.css';
     grid-template-columns: auto 4rem auto;
     justify-content: start;
 }
@@ -185,4 +185,11 @@
     justify-content: start;
     padding: 0.75rem;
     width: 100%;
+}
+.brand{
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+    display: block;
 }

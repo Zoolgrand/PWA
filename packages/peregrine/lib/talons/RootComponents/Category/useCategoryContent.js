@@ -164,7 +164,7 @@ export const useCategoryContent = props => {
 
     useEffect(() => {
 
-        if (!isLoading) {
+        if (!items.includes(null)) {
             setItemsForRender(prevState => [...prevState, ...items])
         }
 

@@ -16,8 +16,7 @@ import FormError from '@magento/venia-ui/lib/components/FormError';
 import QuantityStepper from '@magento/venia-ui/lib/components/QuantityStepper';
 import RichContent from '@magento/venia-ui/lib/components/RichContent/richContent';
 import { ProductOptionsShimmer } from '@magento/venia-ui/lib/components/ProductOptions';
-import CustomAttributes from '@magento/venia-ui/lib/components/ProductFullDetail/CustomAttributes';
-import defaultClasses from '@magento/venia-ui/lib/components/ProductFullDetail/productFullDetail.module.css';
+import defaultClasses from './productFullDetail.module.css';
 
 
 const WishlistButton = React.lazy(() => import('@magento/venia-ui/lib/components/Wishlist/AddToListButton'));
@@ -52,7 +51,6 @@ const ProductFullDetail = props => {
         isSupportedProductType,
         mediaGalleryEntries,
         productDetails,
-        customAttributes,
         wishlistButtonProps
     } = talonProps;
     const { formatMessage } = useIntl();
@@ -188,6 +186,7 @@ const ProductFullDetail = props => {
                             value={productDetails.price.value}
                         />
                     </p>
+                    <h3 className={classes.brand} >Brand: {productDetails.brand} </h3>
                 </section>
                 <section className={classes.imageCarousel}>
                     <Carousel images={mediaGalleryEntries} />
@@ -241,7 +240,6 @@ const ProductFullDetail = props => {
                         />
                     </span>
                     <strong>{productDetails.sku}</strong>
-                    <CustomAttributes customAttributes={customAttributes} />
                 </section>
             </Form>
         </Fragment>
